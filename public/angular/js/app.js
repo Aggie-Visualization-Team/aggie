@@ -73,6 +73,7 @@ require('./services/trend');
 require('./services/trend_fetching');
 require('./services/map');
 require('./services/batch');
+require('./services/visualization');
 
 // Controllers
 require('./controllers/application');
@@ -100,6 +101,7 @@ require('./controllers/trends/lines');
 require('./controllers/analysis');
 require('./controllers/trends/form_modal');
 require('./controllers/datetime_modal');
+require('./controllers/visualization');
 
 // Routes
 require('./routes');

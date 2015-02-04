@@ -5,6 +5,13 @@ angular.module('Aggie')
   function($stateProvider, tz) {
     var lastAnalysis;
 
+
+    $stateProvider.state('visualization', {
+      url: '/visualization',
+      templateUrl: '/templates/visualization/index.html',
+      controller: 'VisualizationController'
+    });
+
     $stateProvider.state('home', {
       url: '/',
       onEnter: function($state) {
