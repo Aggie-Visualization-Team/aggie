@@ -1,6 +1,7 @@
 lib-cov
 *.seed
 *.csv
+*.log
 *.dat
 *.out
 *.pid
