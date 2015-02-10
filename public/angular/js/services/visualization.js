@@ -5,6 +5,7 @@ angular.module('Aggie').factory('VisualizationDataFormatter', [
                 return "Service Test";
             },
             generateSomeGraphDataForY: function() {
+                return "Directive Test";
             }
         };
     }
