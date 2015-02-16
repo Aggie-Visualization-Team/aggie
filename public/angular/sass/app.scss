@@ -315,3 +315,22 @@ svg{
   font-size: 24px;
 }
 
+.reports-data {
+  background-color: blue;
+  .twitter-source {
+    fill:#4099FF;
+  }
+  .facebook-source {
+    fill:#3B5998;
+  }
+  .elmo-source {
+    fill: #F00000 ;
+  }
+
+  .rss-source {
+   fill: #FF9900;
+  }
+  &.unknown-source {
+    fill: #989898;
+  }
+}

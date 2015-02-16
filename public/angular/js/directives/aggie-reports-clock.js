@@ -7,7 +7,7 @@ angular.module('Aggie')
                 link: function($scope, element, attributes) {
                     var radians = 0.0174532925,
                         clockRadius = 200,
-                        margin = 50,
+                        margin = 100,
                         width = (clockRadius+margin)*2,
                         height = (clockRadius+margin)*2,
                         hourHandLength = 2*clockRadius/3,
@@ -23,6 +23,8 @@ angular.module('Aggie')
                     hourLabelRadius = clockRadius - 40,
                     hourLabelYOffset = 7;
 
+                    var graphDataStart = clockRadius + 25,
+                        graphDatalength = 30;
 
                     var hourScale = d3.scale.linear()
                         .range([0,330])
@@ -53,6 +55,7 @@ angular.module('Aggie')
                             balance:secondHandBalance
                         }
                     ];
+
 
                     function drawClock(){ //create all the clock elements
                         updateData();	//draw them in the correct starting position
@@ -123,6 +126,7 @@ angular.module('Aggie')
                                 return d;
                             });
 
+                        renderReportsGraph();
 
                         var hands = face.append('g').attr('id','clock-hands');
 
@@ -173,9 +177,109 @@ angular.module('Aggie')
                     setInterval(function(){
                         updateData();
                         moveHands();
+                        renderReportsGraph();
                     }, 1000);
 
                     d3.select(self.frameElement).style("height", height + "px");
+
+                    function renderReportsGraph() {
+                        if(handData[2].value == 0 ){
+                            renderHourReportsGraph();
+                        }
+                        var reportsData = formatData(getReportPerSecond(handData[2].value));
+
+                        var graphScale = d3.scale.linear()
+                            .range([0, graphDatalength])
+                            .domain([0,( d3.max(reportsData[0].data, function(d){
+                                return d.value;
+                            }))]);
+
+                        var report = d3.select('#clock-face').selectAll('reports-data')
+                            .data(reportsData).enter()
+                            .append('g')
+                            .attr('class', 'reports-data')
+                            .attr('x1', 0)
+                            .attr('x2', 0)
+                            .attr('y1', graphDataStart)
+                            .attr('y2', graphDataStart + graphDatalength)
+                            .attr('transform',function(report){
+                                return 'rotate(' + (180 + (6 * (report.minute - 1))) + ')';
+                            });
+
+                        report.selectAll('rect')
+                            .data(function(d){ return d.data}).enter()
+                            .append('rect')
+                            .attr('width', 10)
+                            .attr('x', -5)
+                            .attr('class', function(d) {
+                                switch (d.type) {
+                                    case 'facebook':
+                                        return 'facebook-source';
+                                    case 'twitter':
+                                        return 'twitter-source';
+                                    case 'elmo':
+                                        return 'elmo-source';
+                                    case 'rss':
+                                        return 'rss-source';
+                                    default:
+                                        return 'unknown-source';
+                                }
+                            })
+                            .attr('y', function(d) {
+                                return graphDataStart + graphScale(d.y0);
+                            })
+                            .attr("height", function(d) {
+                                return (graphScale(d.y1) - graphScale(d.y0));
+                            });
+                    }
+
+                    function renderHourReportsGraph() {
+
+                    }
+
+                    function getReportPerSecond(second){
+
+                        return [{
+                            minute: second,
+                            hour: 0,
+                            data: [
+                                {
+                                    type: 'twitter',
+                                    value: Math.floor(Math.random() * 1000) + 1
+                                },
+                                {
+                                    type: 'rss',
+                                    value: Math.floor(Math.random() * 1000) + 1
+                                },
+                                {
+                                    type: 'elmo',
+                                    value: Math.floor(Math.random() * 1000) + 1
+                                },
+                                {
+                                    type: 'facebook',
+                                    value: Math.floor(Math.random() * 1000) + 1
+                                }
+                            ]
+                        }]
+
+                    }
+                    function formatData(data){
+                        data[0].data.sort(function(a, b) {
+                            return a.value - b.value;
+                        });
+
+                        var y0 = 0;
+                        data[0].data =  data[0].data.map(function(report) {
+                            return {
+                                type: report.type,
+                                value: report.value,
+                                y0: y0,
+                                y1: y0 += report.value
+                            }
+                        });
+
+                        return data;
+                    }
                 }
             }
     }]);
