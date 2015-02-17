@@ -191,9 +191,12 @@ angular.module('Aggie')
                             });
 
 
-                    }
+                    }                     s
 
                     function renderMinReportsGraph() {
+                        if(handData[0].value == 0){
+                            d3.select('#clock-face').selectAll('.reports-data.min').remove();
+                        }
                         var minReportsData = formatData(getReportPerMinute(handData[0].value));
 
                         var graphScale = d3.scale.linear()
