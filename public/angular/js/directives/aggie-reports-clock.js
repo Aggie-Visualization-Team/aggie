@@ -1,7 +1,9 @@
 angular.module('Aggie')
     .directive('clockVisualization', [
-        'VisualizationDataFormatter',
-        function(VisualizationDataFormatter) {
+        'Report',
+        'Source',
+        'Batch',
+        function(Report, Source, Batch) {
             return {
                 restrict:'E',
                 link: function($scope, element, attributes) {
@@ -144,54 +146,54 @@ angular.module('Aggie')
                             d3.select('#clock-face').selectAll('.reports-data.sec').remove();
                             renderMinReportsGraph();
                         }
-                        var secReportsData = formatData(getReportPerSecond(handData[1].value));
+                        else {
+                            var secReportsData = formatData(getReportPerSecond(handData[1].value));
 
-                        var graphScale = d3.scale.linear()
-                            .range([0, graphDatalength])
-                            .domain([0,( d3.max(secReportsData[0].data, function(d){
-                                return d.value;
-                            }))]);
+                            var graphScale = d3.scale.linear()
+                                .range([0, graphDatalength])
+                                .domain([0,( d3.max(secReportsData[0].data, function(d){
+                                    return d.value;
+                                }))]);
 
-                        var secReport = d3.select('#clock-face').selectAll('reports-data sec')
-                            .data(secReportsData).enter()
-                            .append('g')
-                            .attr('class', 'reports-data sec')
-                            .attr('x1', 0)
-                            .attr('x2', 0)
-                            .attr('y1', graphDataStart)
-                            .attr('y2', graphDataStart + graphDatalength)
-                            .attr('transform',function(report){
-                                return 'rotate(' + (180 + (6 * (report.second - 1))) + ')';
-                            });
+                            var secReport = d3.select('#clock-face').selectAll('reports-data sec')
+                                .data(secReportsData).enter()
+                                .append('g')
+                                .attr('class', 'reports-data sec')
+                                .attr('x1', 0)
+                                .attr('x2', 0)
+                                .attr('y1', graphDataStart)
+                                .attr('y2', graphDataStart + graphDatalength)
+                                .attr('transform',function(report){
+                                    return 'rotate(' + (180 + (6 * (report.second - 1))) + ')';
+                                });
 
-                        secReport.selectAll('rect')
-                            .data(function(d){ return d.data}).enter()
-                            .append('rect')
-                            .attr('width', 10)
-                            .attr('x', -5)
-                            .attr('class', function(d) {
-                                switch (d.type) {
-                                    case 'facebook':
-                                        return 'facebook-source';
-                                    case 'twitter':
-                                        return 'twitter-source';
-                                    case 'elmo':
-                                        return 'elmo-source';
-                                    case 'rss':
-                                        return 'rss-source';
-                                    default:
-                                        return 'unknown-source';
-                                }
-                            })
-                            .attr('y', function(d) {
-                                return graphDataStart + graphScale(d.y0);
-                            })
-                            .attr("height", function(d) {
-                                return (graphScale(d.y1) - graphScale(d.y0));
-                            });
-
-
-                    }                     s
+                            secReport.selectAll('rect')
+                                .data(function(d){ return d.data}).enter()
+                                .append('rect')
+                                .attr('width', 10)
+                                .attr('x', -5)
+                                .attr('class', function(d) {
+                                    switch (d.type) {
+                                        case 'facebook':
+                                            return 'facebook-source';
+                                        case 'twitter':
+                                            return 'twitter-source';
+                                        case 'elmo':
+                                            return 'elmo-source';
+                                        case 'rss':
+                                            return 'rss-source';
+                                        default:
+                                            return 'unknown-source';
+                                    }
+                                })
+                                .attr('y', function(d) {
+                                    return graphDataStart + graphScale(d.y0);
+                                })
+                                .attr("height", function(d) {
+                                    return (graphScale(d.y1) - graphScale(d.y0));
+                                });
+                        }
+                    }
 
                     function renderMinReportsGraph() {
                         if(handData[0].value == 0){
@@ -201,9 +203,10 @@ angular.module('Aggie')
 
                         var graphScale = d3.scale.linear()
                             .range([graphDatalength, 0])
-                            .domain([0,( d3.max(minReportsData[0].data, function(d){
-                                return d.value;
-                            }))]);
+                            //.domain([0,( d3.max(minReportsData[0].data, function(d){
+                            //    return d.value;
+                            //}))]);
+                            .domain(1000);
 
                         var minReport = d3.select('#clock-face').selectAll('reports-data min')
                             .data(minReportsData).enter()
@@ -243,7 +246,10 @@ angular.module('Aggie')
                                 return -(graphScale(d.y1) - graphScale(d.y0));
                             });
                     }
-
+                    Report.query().$promise.then(function(result) {
+                          console.log(result.$promise.then(function(data){console.log(data)}) )
+                        });
+                    Batch.load().$promise.then(function(results){console.log(results)});
                     function getReportPerSecond(second){
 
                         return [{
@@ -281,29 +287,25 @@ angular.module('Aggie')
                             data: [
                                 {
                                     type: 'twitter',
-                                    value: Math.floor(Math.random() * 1000) + 1
+                                    value: Math.floor(Math.random() * 1000000) + 1
                                 },
                                 {
                                     type: 'rss',
-                                    value: Math.floor(Math.random() * 1000) + 1
+                                    value: Math.floor(Math.random() * 1000000) + 1
                                 },
                                 {
                                     type: 'elmo',
-                                    value: Math.floor(Math.random() * 1000) + 1
+                                    value: Math.floor(Math.random() * 1000000) + 1
                                 },
                                 {
                                     type: 'facebook',
-                                    value: Math.floor(Math.random() * 1000) + 1
+                                    value: Math.floor(Math.random() * 1000000) + 1
                                 }
                             ]
                         }]
 
                     }
                     function formatData(data){
-                        data[0].data.sort(function(a, b) {
-                            return a.value - b.value;
-                        });
-
                         var y0 = 0;
                         data[0].data =  data[0].data.map(function(report) {
                             return {
