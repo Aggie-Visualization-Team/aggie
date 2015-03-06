@@ -29,7 +29,7 @@
     "interval-to-human": "~0.1.1",
     "jsmin": "~1.0.1",
     "migrate": "^0.2.0",
-    "moment": "~2.8.4",
+    "moment": "~2.9.0",
     "mongoose": "~3.8.7",
     "mongoose-auto-increment": "^3.2.0",
     "mongoose-listento": "0.0.4",
@@ -57,7 +57,8 @@
     "chance": "~0.7.1",
     "single-line-log": "~0.4.1",
     "ejs": "^2.0.8",
-    "fs-extra": "~0.15.0"
+    "fs-extra": "~0.15.0",
+    "monk":"1.0.0"
   },
   "devDependencies": {
     "chai": "~1.9.0",
