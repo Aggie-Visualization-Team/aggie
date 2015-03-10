@@ -182,6 +182,8 @@ angular.module('Aggie')
                             .range([0, graphDataLength])
                             .domain([0,( d3.max(pastMinData[0].data, function(d){
                                 return d.value;
+                            }))/(d3.max(secReportsData[0].data, function(d){
+                                return d.value;
                             }))]);
 
                         var secReport = d3.select('#clock-face').selectAll('reports-data sec')
