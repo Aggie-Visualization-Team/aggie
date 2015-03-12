@@ -20,7 +20,7 @@ angular.module('Aggie')
                     secondLabelYOffset = 5;
 
                     var graphDataStart = clockRadius + 25,
-                        graphDataLength = 30,
+                        graphDataLength = 50,
                         minGraphStart = clockRadius - 100;
 
                     var minuteScale = secondScale = d3.scale.linear()
@@ -32,6 +32,7 @@ angular.module('Aggie')
                     nextDate.add(1,'minutes');
                     nextDate.add(1, 'seconds');
                     var pastMinData = [];
+                    var pastMinMax = -324234234;
                     var rawData = [];
                     $http({
                         method: 'GET',
@@ -43,6 +44,7 @@ angular.module('Aggie')
                     }).success(function(data) {
                         rawData = data;
                         pastMinData = formatData(data, currDate.minute(), currDate.second());
+                        pastMinMax = getMinMax(rawData);
 
                         drawClock();
 
@@ -91,7 +93,7 @@ angular.module('Aggie')
                             .attr('x2',0)
                             .attr('y1',secondTickStart)
                             .attr('y2',secondTickStart + secondTickLength)
-                            .attr('transform',function(d){
+                            .attr('transform', function(d){
                                 return 'rotate(' + secondScale(d) + ')';
                             });
                         //and labels
@@ -102,10 +104,10 @@ angular.module('Aggie')
                             .append('text')
                             .attr('class', 'second-label')
                             .attr('text-anchor','middle')
-                            .attr('x',function(d){
+                            .attr('x', function(d){
                                 return secondLabelRadius*Math.sin(secondScale(d)*radians);
                             })
-                            .attr('y',function(d){
+                            .attr('y', function(d){
                                 return -secondLabelRadius*Math.cos(secondScale(d)*radians) + secondLabelYOffset;
                             })
                             .text(function(d){
@@ -130,14 +132,14 @@ angular.module('Aggie')
                                 return d.type + '-hand';
                             })
                             .attr('x1',0)
-                            .attr('y1',function(d){
+                            .attr('y1', function(d){
                                 return d.balance ? d.balance : 0;
                             })
                             .attr('x2',0)
-                            .attr('y2',function(d){
+                            .attr('y2', function(d){
                                 return d.length;
                             })
-                            .attr('transform',function(d){
+                            .attr('transform', function(d){
                                 return 'rotate('+ d.scale(d.value) +')';
                             });
                     }
@@ -146,7 +148,7 @@ angular.module('Aggie')
                         d3.select('#clock-hands').selectAll('line')
                             .data(handData)
                             .transition()
-                            .attr('transform',function(d){
+                            .attr('transform', function(d){
                                 return 'rotate('+ d.scale(d.value) +')';
                             });
                     }
@@ -159,7 +161,7 @@ angular.module('Aggie')
                     }
 
                     function displayReportsGraph() {
-                        if(handData[1].value == 0 ){
+                        if(handData[1].value == 1 ){
                             //clear seconds data
                             d3.select('#clock-face').selectAll('.reports-data.sec').remove();
                             displayMinReportsGraph();
@@ -178,13 +180,11 @@ angular.module('Aggie')
                     }
 
                     function renderSecondsReports(secReportsData){
-                        var graphScale = d3.scale.linear()
-                            .range([0, graphDataLength])
-                            .domain([0,( d3.max(pastMinData[0].data, function(d){
-                                return d.value;
-                            }))/(d3.max(secReportsData[0].data, function(d){
-                                return d.value;
-                            }))]);
+                        //var graphScale = d3.scale.linear()
+                        //    .domain([0, pastMinMax])
+                        //    .range([0, graphDataLength]);
+
+                        var graphScale = graphDataLength/ pastMinMax;
 
                         var secReport = d3.select('#clock-face').selectAll('reports-data sec')
                             .data(secReportsData).enter()
@@ -194,7 +194,7 @@ angular.module('Aggie')
                             .attr('x2', 0)
                             .attr('y1', graphDataStart)
                             .attr('y2', graphDataStart + graphDataLength)
-                            .attr('transform',function(report){
+                            .attr('transform', function(report){
                                 return 'rotate(' + (180 + (6 * (report.second - 1))) + ')';
                             });
 
@@ -218,10 +218,10 @@ angular.module('Aggie')
                                 }
                             })
                             .attr('y', function(d) {
-                                return graphDataStart + graphScale(d.y0);
+                                return graphDataStart + graphScale * d.y0;
                             })
                             .attr("height", function(d) {
-                                return (graphScale(d.y1) - graphScale(d.y0));
+                                return (graphScale * (d.y1 - d.y0));
                             });
                     }
                     function displayMinReportsGraph() {
@@ -239,6 +239,7 @@ angular.module('Aggie')
                         }).success(function(data) {
                             rawData = data;
                             pastMinData = formatData(data, currDate.minute(), currDate.second());
+                            pastMinMax = getMinMax(rawData);
                             render(pastMinData);
                         });
                     }
@@ -259,7 +260,7 @@ angular.module('Aggie')
                             .attr('x2', 0)
                             .attr('y1', minGraphStart)
                             .attr('y2', minGraphStart - graphDataLength)
-                            .attr('transform',function(report){
+                            .attr('transform', function(report){
                                 return 'rotate(' + (180 + (6 * (report.minute - 1))) + ')';
                             });
 
@@ -355,6 +356,27 @@ angular.module('Aggie')
                             }
                         });
                         return dataToReturn
+                    }
+
+                    function getMinMax(data) {
+                        var max = -324234234;
+                        var authoredAt, compVal, secondData, i, secondMax;
+                        for (i = 0; i < 60; i++) {
+                            secondData = data.filter(function(report) {
+                                authoredAt = moment(report.authoredAt);
+                                compVal = authoredAt.second() - i;
+                                return compVal >= 0 && compVal < 2;
+                            });
+
+                            if(secondData) {
+                                secondMax = secondData.length;
+
+                                if(max < secondMax) {
+                                    max = secondMax;
+                                }
+                            }
+                        }
+                        return max;
                     }
                 }
             }
