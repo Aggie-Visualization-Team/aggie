@@ -1,0 +1,3 @@
+
+- node-sass set to 0.9.0 version
+- in node_module/monk/package.json change mongoskin version to 1.3.20 and run npm install in node_modules/monk/ dir
