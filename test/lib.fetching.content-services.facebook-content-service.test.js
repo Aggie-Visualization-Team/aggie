@@ -107,14 +107,5 @@ describe('Facebook content service', function() {
       expectToEmitError(service, 'Missing Facebook URL', done);
       service.fetch({maxCount: 50}, function(){});
     });
-
-    /**
-    it('should emit an invalid URL error', function(done) {
-      var service = stubWithFixture('facebook-no-source-match.json');
-      expectToNotEmitReport(service, done);
-      expectToEmitError(service, 'Invalid Facebook URL', done);
-      service.fetch({maxCount: 50}, function(){});
-    });
-     **/
   });
 });
