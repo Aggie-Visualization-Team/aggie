@@ -27,8 +27,8 @@ angular.module('Aggie')
                         .range([0,354])
                         .domain([0,59]);
 
-                    var currDate = moment('2014-06-21 04:05:10');
-                    var nextDate = moment('2014-06-21 04:05:10');
+                    var currDate = moment();
+                    var nextDate = moment();
                     nextDate.add(1,'minutes');
                     nextDate.add(1, 'seconds');
                     var pastMinData = [];
