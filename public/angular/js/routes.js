@@ -46,8 +46,8 @@ angular.module('Aggie')
       url: '/guest',
       onEnter: ['AuthService', 'FlashService', function(AuthService, flash) {
         AuthService.login({
-              'username': "guest",
-              'password': "verysecure"
+              'username': "viewer",
+              'password': "password"
             },
             function(err) {
               if (!err) {
