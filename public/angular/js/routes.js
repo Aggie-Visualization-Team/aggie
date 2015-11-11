@@ -42,6 +42,22 @@ angular.module('Aggie')
       }
     });
 
+    $stateProvider.state('guest', {
+      url: '/guest',
+      onEnter: ['AuthService', 'FlashService', function(AuthService, flash) {
+        AuthService.login({
+              'username': "guest",
+              'password': "verysecure"
+            },
+            function(err) {
+              if (!err) {
+              } else {
+                flash.setAlertNow(err.data);
+              }
+            });
+      }]
+    });
+    
     $stateProvider.state('reports', {
       url: '/reports?keywords&page&before&after&sourceId&status&media&incidentId&author',
       templateUrl: '/templates/reports/index.html',
