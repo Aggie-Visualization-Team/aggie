@@ -41,7 +41,8 @@ angular.module('Aggie').config([
       'twitter': 'Twitter',
       'rss': 'RSS',
       'elmo': 'Elmo',
-      'facebook': 'Facebook'
+      'facebook': 'Facebook',
+      'ojo_con_el_voto': 'Ojo Con El Voto'
     })
 
     // Incident status options
