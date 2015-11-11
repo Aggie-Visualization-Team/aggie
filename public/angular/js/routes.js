@@ -43,7 +43,7 @@ angular.module('Aggie')
     });
 
     $stateProvider.state('guest', {
-      url: '/guest',
+      url: '/viewer',
       onEnter: ['AuthService', 'FlashService', function(AuthService, flash) {
         AuthService.login({
               'username': "viewer",
@@ -55,7 +55,10 @@ angular.module('Aggie')
                 flash.setAlertNow(err.data);
               }
             });
-      }]
+      }],
+      data : {
+        public: true
+      }
     });
 
     $stateProvider.state('reports', {
