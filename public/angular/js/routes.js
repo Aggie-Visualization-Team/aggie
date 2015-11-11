@@ -57,7 +57,7 @@ angular.module('Aggie')
             });
       }]
     });
-    
+
     $stateProvider.state('reports', {
       url: '/reports?keywords&page&before&after&sourceId&status&media&incidentId&author',
       templateUrl: '/templates/reports/index.html',
