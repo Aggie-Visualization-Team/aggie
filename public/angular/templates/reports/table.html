@@ -31,7 +31,7 @@
         {{ sourcesById[r._source].nickname || '[Deleted]' }}
       </td>
       <td class="compact author" ng-class="{ strong: !isRead(r) }">
-        <div ng-switch on="sourcesById[r._source].nickname == 'ojo'">
+        <div ng-switch on="sourcesById[r._source].media == 'ojo_con_el_voto'">
           <span ng-switch-when="true"><image src="{{r.author}}"></image></span>
           <span ng-switch-when="false">{{r.author}}</span>
         </div>

@@ -1,7 +1,8 @@
 var Report = require('./report');
 var async = require('async');
 
-var ITEMS_PER_BATCH = 10; // 10 items per batch
+//var ITEMS_PER_BATCH = 10; // 10 items per batch
+var ITEMS_PER_BATCH = 25; // 10 items per batch
 var BATCH_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 
 function Batch() {}

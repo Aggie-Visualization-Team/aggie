@@ -44,13 +44,14 @@ angular.module('Aggie')
 
     $stateProvider.state('guest', {
       url: '/viewer',
-      onEnter: ['AuthService', 'FlashService', function(AuthService, flash) {
+      onEnter: ['AuthService', 'FlashService','$state', function(AuthService, flash, $state) {
         AuthService.login({
               'username': "viewer",
               'password': "password"
             },
             function(err) {
               if (!err) {
+		$state.go('analysis.trend-lines');
               } else {
                 flash.setAlertNow(err.data);
               }
