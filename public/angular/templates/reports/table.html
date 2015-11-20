@@ -31,7 +31,10 @@
         {{ sourcesById[r._source].nickname || '[Deleted]' }}
       </td>
       <td class="compact author" ng-class="{ strong: !isRead(r) }">
-        {{ r.author }}
+        <div ng-switch on="sourcesById[r._source].nickname == 'ojo'">
+          <span ng-switch-when="true"><image src="{{r.author}}"></image></span>
+          <span ng-switch-when="false">{{r.author}}</span>
+        </div>
       </td>
       <td class="expand content" ng-class="{ strong: !isRead(r) }">
         <a href="/reports/{{r._id}}">{{ (r.content || '[No Content]') | stripHtml }}</a>
