@@ -32,7 +32,7 @@
       </td>
       <td class="compact author" ng-class="{ strong: !isRead(r) }">
         <div ng-switch on="sourcesById[r._source].media == 'ojo_con_el_voto'">
-          <span ng-switch-when="true"><image src="{{r.author}}"></image></span>
+          <span ng-switch-when="true"><image style="max-width:250px;" src="{{r.author}}"></image></span>
           <span ng-switch-when="false">{{r.author}}</span>
         </div>
       </td>
