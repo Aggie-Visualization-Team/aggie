@@ -4,9 +4,8 @@
       <th></th>
       <th>Time</th>
       <th>Media</th>
-      <th>Source</th>
-      <th>Author</th>
       <th>Content</th>
+      <th>Author</th>
       <th ng-hide="pageType == 'show-incident'">Incident</th><!-- No need to show incident on incident detail page -->
       <th>Flagged</th>
     </tr>
@@ -27,17 +26,14 @@
       <td class="compact source" ng-class="sourceClass(r)">
         <div class="icon-left"></div>
       </td>
-      <td class="compact source" ng-class="{ strong: !isRead(r) }">
-        {{ sourcesById[r._source].nickname || '[Deleted]' }}
+      <td class="expand content" ng-class="{ strong: !isRead(r) }">
+        <a href="/reports/{{r._id}}">{{ (r.content || '[No Content]') | stripHtml }}</a>
       </td>
       <td class="compact author" ng-class="{ strong: !isRead(r) }">
         <div ng-switch on="sourcesById[r._source].media == 'ojo_con_el_voto'">
           <span ng-switch-when="true"><image style="max-width:250px;" src="{{r.author}}"></image></span>
           <span ng-switch-when="false">{{r.author}}</span>
         </div>
-      </td>
-      <td class="expand content" ng-class="{ strong: !isRead(r) }">
-        <a href="/reports/{{r._id}}">{{ (r.content || '[No Content]') | stripHtml }}</a>
       </td>
       <td class="expand incident text-center relative" ng-hide="pageType == 'show-incident'">
         <div ng-if="incidents.length">
